@@ -176,6 +176,19 @@ public class Scanner {
 				incrementCurrCharIndex(i + 1);
 				break;
 
+			case '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9':
+				i = 1;
+				do
+					nextChar = source.charAt(currCharIndex + i++);
+				while (Character.isDigit(nextChar));
+				final String lexeme = source.substring(currCharIndex + 1,
+						currCharIndex + i);
+				final Integer numLiteral = Integer.parseInt(lexeme);
+				token = new Token(STRING, lexeme, numLiteral, currLine);
+				tokens.add(token);
+				incrementCurrCharIndex(i + 1);
+
+				break;
 			case ' ':
 				break;
 			case '\n':
