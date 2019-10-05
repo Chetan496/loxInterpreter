@@ -178,123 +178,22 @@ public class Scanner {
 				break;
 
 			case '0':
-				i = 1;
-				do
-					nextChar = source.charAt(currCharIndex + i++);
-				while (Character.isDigit(nextChar));
-				String lexeme = source.substring(currCharIndex, currCharIndex + i - 1);
-				Integer numLiteral = Integer.parseInt(lexeme);
-				token = new Token(NUMBER, lexeme, numLiteral, currLine);
-				tokens.add(token);
-				incrementCurrCharIndex(i - 1);
-
-				break;
-
 			case '1':
-				i = 1;
-				do
-					nextChar = source.charAt(currCharIndex + i++);
-				while (Character.isDigit(nextChar));
-				lexeme = source.substring(currCharIndex, currCharIndex + i - 1);
-				numLiteral = Integer.parseInt(lexeme);
-				token = new Token(NUMBER, lexeme, numLiteral, currLine);
-				tokens.add(token);
-				incrementCurrCharIndex(i - 1);
-
-				break;
-
 			case '2':
-				i = 1;
-				do
-					nextChar = source.charAt(currCharIndex + i++);
-				while (Character.isDigit(nextChar));
-				lexeme = source.substring(currCharIndex, currCharIndex + i - 1);
-				numLiteral = Integer.parseInt(lexeme);
-				token = new Token(NUMBER, lexeme, numLiteral, currLine);
-				tokens.add(token);
-				incrementCurrCharIndex(i - 1);
-
-				break;
-
 			case '3':
-				i = 1;
-				do
-					nextChar = source.charAt(currCharIndex + i++);
-				while (Character.isDigit(nextChar));
-				lexeme = source.substring(currCharIndex, currCharIndex + i - 1);
-				numLiteral = Integer.parseInt(lexeme);
-				token = new Token(NUMBER, lexeme, numLiteral, currLine);
-				tokens.add(token);
-				incrementCurrCharIndex(i - 1);
-
-				break;
 			case '4':
-				i = 1;
-				do
-					nextChar = source.charAt(currCharIndex + i++);
-				while (Character.isDigit(nextChar));
-				lexeme = source.substring(currCharIndex, currCharIndex + i - 1);
-				numLiteral = Integer.parseInt(lexeme);
-				token = new Token(NUMBER, lexeme, numLiteral, currLine);
-				tokens.add(token);
-				incrementCurrCharIndex(i - 1);
-
-				break;
 			case '5':
-				i = 1;
-				do
-					nextChar = source.charAt(currCharIndex + i++);
-				while (Character.isDigit(nextChar));
-				lexeme = source.substring(currCharIndex, currCharIndex + i - 1);
-				numLiteral = Integer.parseInt(lexeme);
-				token = new Token(NUMBER, lexeme, numLiteral, currLine);
-				tokens.add(token);
-				incrementCurrCharIndex(i - 1);
-
-				break;
 			case '6':
-				i = 1;
-				do
-					nextChar = source.charAt(currCharIndex + i++);
-				while (Character.isDigit(nextChar));
-				lexeme = source.substring(currCharIndex, currCharIndex + i - 1);
-				numLiteral = Integer.parseInt(lexeme);
-				token = new Token(NUMBER, lexeme, numLiteral, currLine);
-				tokens.add(token);
-				incrementCurrCharIndex(i - 1);
-
-				break;
 			case '7':
-				i = 1;
-				do
-					nextChar = source.charAt(currCharIndex + i++);
-				while (Character.isDigit(nextChar));
-				lexeme = source.substring(currCharIndex, currCharIndex + i - 1);
-				numLiteral = Integer.parseInt(lexeme);
-				token = new Token(NUMBER, lexeme, numLiteral, currLine);
-				tokens.add(token);
-				incrementCurrCharIndex(i - 1);
-
-				break;
 			case '8':
-				i = 1;
-				do
-					nextChar = source.charAt(currCharIndex + i++);
-				while (Character.isDigit(nextChar));
-				lexeme = source.substring(currCharIndex, currCharIndex + i - 1);
-				numLiteral = Integer.parseInt(lexeme);
-				token = new Token(NUMBER, lexeme, numLiteral, currLine);
-				tokens.add(token);
-				incrementCurrCharIndex(i - 1);
-
-				break;
 			case '9':
 				i = 1;
 				do
 					nextChar = source.charAt(currCharIndex + i++);
 				while (Character.isDigit(nextChar));
-				lexeme = source.substring(currCharIndex, currCharIndex + i - 1);
-				numLiteral = Integer.parseInt(lexeme);
+				final String lexeme = source.substring(currCharIndex,
+						currCharIndex + i - 1);
+				final Integer numLiteral = Integer.parseInt(lexeme);
 				token = new Token(NUMBER, lexeme, numLiteral, currLine);
 				tokens.add(token);
 				incrementCurrCharIndex(i - 1);
