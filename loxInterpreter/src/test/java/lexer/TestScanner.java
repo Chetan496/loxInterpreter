@@ -104,4 +104,32 @@ class TestScanner {
 		Assert.assertEquals(TokenType.IDENTIFIER, secondToken.tokenType);
 		Assert.assertEquals(TokenType.EQUAL, thirdToken.tokenType);
 	}
+
+	@Test
+	void testTokenGenForSingleLineComment() {
+		final String source = "var x; //var answer = (123+24.67*79)";
+		final Scanner scanner = new Scanner(source);
+		final List<Token> scanTokens = scanner.scanTokens();
+
+		final Token firstToken = scanTokens.get(0);
+		final Token secondToken = scanTokens.get(1);
+		final Token thirdToken = scanTokens.get(2);
+		Assert.assertEquals(TokenType.VAR, firstToken.tokenType);
+		Assert.assertEquals(TokenType.IDENTIFIER, secondToken.tokenType);
+		Assert.assertEquals(TokenType.SEMICOLON, thirdToken.tokenType);
+	}
+
+	@Test
+	void testTokenGenForMultiLineComment() {
+		final String source = "var x = answer; /*mult\r\n" + "line \r\n" + "comment*/";
+		final Scanner scanner = new Scanner(source);
+		final List<Token> scanTokens = scanner.scanTokens();
+
+		final Token firstToken = scanTokens.get(0);
+		final Token secondToken = scanTokens.get(1);
+		final Token thirdToken = scanTokens.get(2);
+		Assert.assertEquals(TokenType.VAR, firstToken.tokenType);
+		Assert.assertEquals(TokenType.IDENTIFIER, secondToken.tokenType);
+		Assert.assertEquals(TokenType.EQUAL, thirdToken.tokenType);
+	}
 }

@@ -140,9 +140,26 @@ public class Scanner {
 				break;
 			case '/':
 				if (match('/'))
-					while (peek() != '\n' && !isAtEnd())
+					while (!isAtEnd() && peek() != '\n')
 						advance();
-				else {
+				else if (match('*')) {
+					while (!isAtEnd() && peek() != '*') {
+						if (peek() == '\n')
+							currLine++;
+
+						advance();
+					}
+
+					if (isAtEnd())
+						Lox.error(currLine, "Unexpected char");
+					else {
+						advance(); // consumed *
+						if (!match('/'))
+							Lox.error(currLine, "Unexpected char");
+
+					}
+
+				} else {
 					token = new Token(SLASH, "/", "/", currLine);
 					tokens.add(token);
 				}
