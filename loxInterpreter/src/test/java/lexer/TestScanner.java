@@ -90,4 +90,18 @@ class TestScanner {
 		Assert.assertEquals(TokenType.NUMBER, secondToken.tokenType);
 		Assert.assertEquals(TokenType.PLUS, thirdToken.tokenType);
 	}
+
+	@Test
+	void testTokenGenForStmtContainingIdentifier() {
+		final String source = "var answer = (123+24.67*79)";
+		final Scanner scanner = new Scanner(source);
+		final List<Token> scanTokens = scanner.scanTokens();
+
+		final Token firstToken = scanTokens.get(0);
+		final Token secondToken = scanTokens.get(1);
+		final Token thirdToken = scanTokens.get(2);
+		Assert.assertEquals(TokenType.VAR, firstToken.tokenType);
+		Assert.assertEquals(TokenType.IDENTIFIER, secondToken.tokenType);
+		Assert.assertEquals(TokenType.EQUAL, thirdToken.tokenType);
+	}
 }

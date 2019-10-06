@@ -14,6 +14,7 @@ import static lexer.TokenType.FOR;
 import static lexer.TokenType.FUN;
 import static lexer.TokenType.GREATER;
 import static lexer.TokenType.GREATER_EQUAL;
+import static lexer.TokenType.IDENTIFIER;
 import static lexer.TokenType.IF;
 import static lexer.TokenType.LEFT_BRACE;
 import static lexer.TokenType.LEFT_PAREN;
@@ -138,8 +139,13 @@ public class Scanner {
 
 				break;
 			case '/':
-				token = new Token(SLASH, "/", "/", currLine);
-				tokens.add(token);
+				if (match('/'))
+					while (peek() != '\n' && !isAtEnd())
+						advance();
+				else {
+					token = new Token(SLASH, "/", "/", currLine);
+					tokens.add(token);
+				}
 
 				break;
 			case '*':
@@ -213,12 +219,28 @@ public class Scanner {
 			default:
 				if (isDigit(currentChar))
 					number();
+				else if (isAlpha(currentChar))
+					identifier();
 				else
 					Lox.error(currLine, "Unexpected character.");
 				break;
 			}
 		}
 		return tokens;
+	}
+
+	private void identifier() {
+		// either an identifier or a Keyword..
+		start = current - 1;
+		while (isAlphaNumeric(peek()))
+			advance();
+
+		final String maybeIdentifier = source.substring(start, current);
+		final TokenType tokenType = keywords.getOrDefault(maybeIdentifier, IDENTIFIER);
+		final Token token = new Token(tokenType, maybeIdentifier, maybeIdentifier,
+				currLine);
+		tokens.add(token);
+
 	}
 
 	private void string() {
@@ -299,6 +321,14 @@ public class Scanner {
 		if (current + 1 >= source.length())
 			return '\0';
 		return source.charAt(current + 1);
+	}
+
+	private boolean isAlpha(char c) {
+		return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '_';
+	}
+
+	private boolean isAlphaNumeric(char c) {
+		return isAlpha(c) || isDigit(c);
 	}
 
 }
