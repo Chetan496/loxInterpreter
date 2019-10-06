@@ -48,11 +48,13 @@ public class Scanner {
 	private final String source;
 
 	// start position for current lexeme
-	private final int start = 0;
+	private int start = 0;
 
 	private int current = 0;
 
 	private int currLine = 1;
+
+	private final List<Token> tokens = new ArrayList<>();
 
 	private static final Map<String, TokenType> keywords;
 
@@ -82,12 +84,9 @@ public class Scanner {
 
 	public List<Token> scanTokens() {
 
-		final List<Token> tokens = new ArrayList<>();
-		final int length = source.length();
 		Token token = null;
 		while (!isAtEnd()) {
 			final char currentChar = advance();
-			char nextChar;
 
 			switch (currentChar) {
 			case '(':
@@ -200,42 +199,8 @@ public class Scanner {
 				}
 				break;
 			case '"':
-				// find the next index where we find a closing quote again. extract that
-				// part in a string token
-				int i = 1;
-				do
-					nextChar = source.charAt(current + i++);
-				while (nextChar != '"');
-				if (current + i > length) {
-					// TODO: raise an error
-				}
 
-				final String literal = source.substring(current + 1, current + i - 1);
-				token = new Token(STRING, literal, literal, currLine);
-				tokens.add(token);
-				incrementCurrCharIndex(i);
-				break;
-
-			case '0':
-			case '1':
-			case '2':
-			case '3':
-			case '4':
-			case '5':
-			case '6':
-			case '7':
-			case '8':
-			case '9':
-				i = 1;
-				do
-					nextChar = source.charAt(current + i++);
-				while (Character.isDigit(nextChar));
-				final String lexeme = source.substring(current, current + i - 1);
-				final Integer numLiteral = Integer.parseInt(lexeme);
-				token = new Token(NUMBER, lexeme, numLiteral, currLine);
-				tokens.add(token);
-				incrementCurrCharIndex(i - 1);
-
+				string();
 				break;
 
 			case ' ':
@@ -246,15 +211,58 @@ public class Scanner {
 				currLine = currLine + 1;
 				break;
 			default:
+				if (isDigit(currentChar))
+					number();
+				else
+					Lox.error(currLine, "Unexpected character.");
 				break;
 			}
 		}
 		return tokens;
 	}
 
-	private void incrementCurrCharIndex(int lengthOfTokenConsumed) {
-		current = current + lengthOfTokenConsumed;
+	private void string() {
+		// find the next index where we find a closing quote again. extract that
+		// part in a string token
+		Token token;
+		start = current;
+		while (peek() != '"' && !isAtEnd()) {
 
+			if (peek() == '\n')
+				currLine = currLine + 1;
+			advance();
+		}
+
+		if (isAtEnd()) {
+			Lox.error(currLine, "Unterminated string");
+			return;
+		}
+
+		advance();
+
+		final String literal = source.substring(start, current - 1);
+		token = new Token(STRING, literal, literal, currLine);
+		tokens.add(token);
+	}
+
+	private void number() {
+		Token token;
+		start = current - 1;
+		while (isDigit(peek()))
+			advance();
+
+		if (peek() == '.' && isDigit(peekNext())) {
+
+			advance(); // consume the "."
+
+			while (isDigit(peek()))
+				advance();
+		}
+
+		final String numLexeme = source.substring(start, current);
+		final Double doubleLiteral = Double.parseDouble(numLexeme);
+		token = new Token(NUMBER, numLexeme, doubleLiteral, currLine);
+		tokens.add(token);
 	}
 
 	private boolean isAtEnd() {
@@ -281,6 +289,16 @@ public class Scanner {
 		current = current + 1; // will advance only if the next char is matching the
 								// expected char
 		return true;
+	}
+
+	private boolean isDigit(char c) {
+		return c >= '0' && c <= '9';
+	}
+
+	private char peekNext() {
+		if (current + 1 >= source.length())
+			return '\0';
+		return source.charAt(current + 1);
 	}
 
 }

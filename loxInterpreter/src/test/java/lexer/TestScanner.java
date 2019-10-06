@@ -77,4 +77,17 @@ class TestScanner {
 		Assert.assertEquals(TokenType.PLUS, thirdToken.tokenType);
 	}
 
+	@Test
+	void testTokenGenForExprContainingFloatNumberAndOperators() {
+		final String source = "(123+24.67*79)";
+		final Scanner scanner = new Scanner(source);
+		final List<Token> scanTokens = scanner.scanTokens();
+		Assert.assertEquals(7, scanTokens.size());
+		final Token firstToken = scanTokens.get(0);
+		final Token secondToken = scanTokens.get(1);
+		final Token thirdToken = scanTokens.get(2);
+		Assert.assertEquals(TokenType.LEFT_PAREN, firstToken.tokenType);
+		Assert.assertEquals(TokenType.NUMBER, secondToken.tokenType);
+		Assert.assertEquals(TokenType.PLUS, thirdToken.tokenType);
+	}
 }
