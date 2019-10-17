@@ -15,4 +15,9 @@ public class Binary extends Expr {
 		this.right = right;
 	}
 
+	@Override
+	<T> T accept(ExprVisitor<T> exprVisitor) {
+		return exprVisitor.visit(this);
+	}
+
 }

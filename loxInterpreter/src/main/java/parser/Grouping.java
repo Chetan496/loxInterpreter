@@ -9,4 +9,9 @@ public class Grouping extends Expr {
 		this.expr = expr;
 	}
 
+	@Override
+	<T> T accept(ExprVisitor<T> exprVisitor) {
+		return exprVisitor.visit(this);
+	}
+
 }
