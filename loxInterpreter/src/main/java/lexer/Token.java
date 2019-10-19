@@ -3,9 +3,9 @@ package lexer;
 public class Token {
 
 	public final String lexeme;
-	final TokenType tokenType;
+	public final TokenType tokenType;
 
-	final Object literal;
+	final public Object literal;
 	final int line;
 
 	public Token(TokenType tokenType, String lexeme, Object literal, int line) {
@@ -18,8 +18,7 @@ public class Token {
 
 	@Override
 	public String toString() {
-		return "Token [tokenType=" + tokenType + ", lexeme=" + lexeme + ", literal="
-				+ literal + "]";
+		return "Token [tokenType=" + tokenType + ", lexeme=" + lexeme + ", literal=" + literal + "]";
 	}
 
 }
