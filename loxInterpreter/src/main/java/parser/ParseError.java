@@ -1,5 +1,5 @@
 package parser;
 
-public class ParseError extends RuntimeException {
+public class ParseError extends Exception {
 
 }

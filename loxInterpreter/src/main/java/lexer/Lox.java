@@ -7,6 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import parser.AstPrinter;
+import parser.Expr;
+import parser.Parser;
+
 public class Lox {
 
 	static boolean hadError = false;
@@ -27,15 +31,26 @@ public class Lox {
 	private static void run(String source) {
 		final Scanner scanner = new Scanner(source);
 		final List<Token> tokens = scanner.scanTokens();
+		final Parser parser = new Parser(tokens);
+		final Expr expr = parser.parse();
 
-		for (final Token token : tokens)
-			System.out.println(token);
+		if (hadError)
+			return;
+
+		System.out.println(new AstPrinter().print(expr));
 
 	}
 
 	static void error(int line, String message) {
 
 		report(line, "", message);
+	}
+
+	public static void error(Token token, String message) {
+		if (token.tokenType == TokenType.EOF)
+			report(token.line, " at end", message);
+		else
+			report(token.line, " at '" + token.lexeme + "'", message);
 	}
 
 	private static void report(int line, String where, String message) {
