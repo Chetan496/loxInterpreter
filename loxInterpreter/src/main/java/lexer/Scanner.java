@@ -7,6 +7,7 @@ import static lexer.TokenType.CLASS;
 import static lexer.TokenType.COMMA;
 import static lexer.TokenType.DOT;
 import static lexer.TokenType.ELSE;
+import static lexer.TokenType.EOF;
 import static lexer.TokenType.EQUAL;
 import static lexer.TokenType.EQUAL_EQUAL;
 import static lexer.TokenType.FALSE;
@@ -243,6 +244,8 @@ public class Scanner {
 				break;
 			}
 		}
+
+		tokens.add(new Token(EOF, "", null, currLine));
 		return tokens;
 	}
 
@@ -316,6 +319,8 @@ public class Scanner {
 	}
 
 	private char peek() {
+		if (isAtEnd())
+			return '\0';
 		return source.charAt(current);
 	}
 
