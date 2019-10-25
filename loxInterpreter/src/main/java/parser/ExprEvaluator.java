@@ -136,6 +136,19 @@ public class ExprEvaluator implements ExprVisitor<Object> {
 			}
 		}
 
+		if (exprVal instanceof Boolean) {
+			Boolean val = (Boolean) exprVal;
+			if (operator == null) {
+				return val;
+			} else {
+
+				TokenType tokenType = operator.tokenType;
+				if (tokenType == TokenType.BANG) {
+					return !val;
+				}
+			}
+		}
+
 		if (exprVal instanceof String) {
 
 			String val = (String) exprVal;
