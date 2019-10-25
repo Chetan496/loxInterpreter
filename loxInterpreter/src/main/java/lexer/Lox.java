@@ -9,6 +9,7 @@ import java.util.List;
 
 import parser.AstPrinter;
 import parser.Expr;
+import parser.ExprEvaluator;
 import parser.Parser;
 
 public class Lox {
@@ -38,6 +39,9 @@ public class Lox {
 			return;
 
 		System.out.println(new AstPrinter().print(expr));
+		ExprEvaluator evaluator = new ExprEvaluator();
+		Object result = evaluator.evaluate(expr);
+		System.out.println(result);
 
 	}
 
