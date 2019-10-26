@@ -26,6 +26,9 @@ public class ArithmeticExprEvaluator implements BinaryExprEvaluator {
 			return (Double) left * (Double) right;
 		case SLASH:
 			Validator.checkNumberOperands(token, left, right);
+			if ((double) right == 0) {
+				throw new RuntimeError(token, "Detected a division by zero.");
+			}
 			return (Double) left / (Double) right;
 		default:
 			return null;
