@@ -12,6 +12,7 @@ import parser.Expr;
 import parser.Interpreter;
 import parser.Parser;
 import parser.util.RuntimeError;
+import parser.util.StringUtils;
 
 public class Lox {
 
@@ -46,7 +47,7 @@ public class Lox {
 		Interpreter interpreter = new Interpreter();
 		Object result = interpreter.interpret(expr);
 		System.out.println("===============================================Result===================================");
-		System.out.println(stringify(result));
+		System.out.println(StringUtils.stringify(result));
 
 	}
 
@@ -94,22 +95,6 @@ public class Lox {
 	public static void runtimeError(RuntimeError error) {
 		System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
 		hadRuntimeError = true;
-	}
-
-	private static String stringify(Object object) {
-		if (object == null)
-			return "nil";
-
-		// Hack. Work around Java adding ".0" to integer-valued doubles.
-		if (object instanceof Double) {
-			String text = object.toString();
-			if (text.endsWith(".0")) {
-				text = text.substring(0, text.length() - 2);
-			}
-			return text;
-		}
-
-		return object.toString();
 	}
 
 }

@@ -29,4 +29,14 @@ public class Validator {
 
 		throw new RuntimeError(operator, "Operand must be a boolean.");
 	}
+
+	public static void checkOperandsStringOrNumber(Token operator, Object left, Object right) {
+		if ((left instanceof Double || left instanceof String)
+				&& (right instanceof Double || right instanceof String)) {
+			return;
+		}
+
+		throw new RuntimeError(operator, "Operands must be either a string or a number.");
+
+	}
 }
