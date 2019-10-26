@@ -2,7 +2,11 @@ package parser;
 
 import lexer.Token;
 import lexer.TokenType;
+import parser.evaluators.BinaryExprEvaluator;
+import parser.evaluators.BinaryExprEvaluatorFactory;
 
+/* TODO: runtime error handling.. do not allow things like multiplication of number by a string etc.
+ * also simplify the below if else ladder for different binary expressions*/
 public class ExprEvaluator implements ExprVisitor<Object> {
 
 	public Object evaluate(Expr expr) {
@@ -11,105 +15,14 @@ public class ExprEvaluator implements ExprVisitor<Object> {
 
 	@Override
 	public Object visit(Binary binary) {
-		Token operator = binary.operator;
+
 		Object leftVal = binary.left.accept(this);
 		Object rightVal = binary.right.accept(this);
 
-		TokenType operatorTokenType = operator.tokenType;
+		BinaryExprEvaluator binExprEvaluator = BinaryExprEvaluatorFactory
+				.getBinaryExprEvaluator(binary.operator.tokenType);
 
-		if (operatorTokenType == TokenType.STAR) {
-
-			if (leftVal instanceof Double && rightVal instanceof Double) {
-				Double leftNum = (Double) leftVal;
-				Double rightNum = (Double) rightVal;
-
-				return leftNum * rightNum;
-			}
-		} else if (operatorTokenType == TokenType.SLASH) {
-			if (leftVal instanceof Double && rightVal instanceof Double) {
-				Double leftNum = (Double) leftVal;
-				Double rightNum = (Double) rightVal;
-
-				return leftNum / rightNum;
-			}
-		} else if (operatorTokenType == TokenType.MINUS) {
-
-			if (leftVal instanceof Double && rightVal instanceof Double) {
-				Double leftNum = (Double) leftVal;
-				Double rightNum = (Double) rightVal;
-
-				return leftNum - rightNum;
-			}
-		} else if (operatorTokenType == TokenType.PLUS) {
-
-			if (leftVal instanceof Double && rightVal instanceof Double) {
-				Double leftNum = (Double) leftVal;
-				Double rightNum = (Double) rightVal;
-
-				return leftNum + rightNum;
-			}
-
-			if (leftVal instanceof String && rightVal instanceof String) {
-				String leftStr = (String) leftVal;
-				String rightStr = (String) rightVal;
-
-				return leftStr + rightStr;
-			}
-		} else if (isComparisonOperator(operatorTokenType)) {
-
-			if (leftVal instanceof Double && rightVal instanceof Double) {
-				Double leftNum = (Double) leftVal;
-				Double rightNum = (Double) rightVal;
-
-				if (operatorTokenType == TokenType.LESS) {
-					return leftNum < rightNum;
-				} else if (operatorTokenType == TokenType.LESS_EQUAL) {
-					return leftNum <= rightNum;
-				} else if (operatorTokenType == TokenType.GREATER) {
-					return leftNum > rightNum;
-				} else if (operatorTokenType == TokenType.GREATER_EQUAL) {
-					return leftNum >= rightNum;
-				}
-
-			}
-
-		} else if (isEqualityOperator(operatorTokenType)) {
-
-			if (operatorTokenType == TokenType.EQUAL_EQUAL) {
-				if (leftVal instanceof Double && rightVal instanceof Double) {
-
-					return leftVal == rightVal;
-				}
-
-				if (leftVal instanceof Boolean && rightVal instanceof Boolean) {
-
-					return leftVal == rightVal;
-				}
-			}
-
-			if (operatorTokenType == TokenType.BANG_EQUAL) {
-				if (leftVal instanceof Double && rightVal instanceof Double) {
-
-					return leftVal != rightVal;
-				}
-
-				if (leftVal instanceof Boolean && rightVal instanceof Boolean) {
-
-					return leftVal != rightVal;
-				}
-			}
-
-		}
-		return null;
-	}
-
-	private boolean isEqualityOperator(TokenType operatorTokenType) {
-		return operatorTokenType == TokenType.EQUAL_EQUAL || operatorTokenType == TokenType.BANG_EQUAL;
-	}
-
-	private boolean isComparisonOperator(TokenType operatorTokenType) {
-		return operatorTokenType == TokenType.LESS || operatorTokenType == TokenType.LESS_EQUAL
-				|| operatorTokenType == TokenType.GREATER || operatorTokenType == TokenType.GREATER_EQUAL;
+		return binExprEvaluator.evaluate(binary.operator.tokenType, leftVal, rightVal);
 	}
 
 	@Override
@@ -165,6 +78,15 @@ public class ExprEvaluator implements ExprVisitor<Object> {
 
 		return literal.value;
 
+	}
+
+	private boolean isEqualityOperator(TokenType operatorTokenType) {
+		return operatorTokenType == TokenType.EQUAL_EQUAL || operatorTokenType == TokenType.BANG_EQUAL;
+	}
+
+	private boolean isComparisonOperator(TokenType operatorTokenType) {
+		return operatorTokenType == TokenType.LESS || operatorTokenType == TokenType.LESS_EQUAL
+				|| operatorTokenType == TokenType.GREATER || operatorTokenType == TokenType.GREATER_EQUAL;
 	}
 
 }

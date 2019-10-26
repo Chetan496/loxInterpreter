@@ -16,6 +16,8 @@ public class Lox {
 
 	static boolean hadError = false;
 
+	static boolean hadRuntimeError = false;
+
 	public static void main(String[] args) throws IOException {
 
 		if (args.length > 1) {
