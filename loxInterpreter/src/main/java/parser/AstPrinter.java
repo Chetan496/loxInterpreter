@@ -1,9 +1,13 @@
 package parser;
 
+import parser.util.RuntimeError;
+
 public class AstPrinter implements ExprVisitor<String> {
 
 	public String print(Expr expr) {
+
 		return expr.accept(this);
+
 	}
 
 	@Override
@@ -27,7 +31,7 @@ public class AstPrinter implements ExprVisitor<String> {
 	}
 
 	@Override
-	public String visit(Unary unary) {
+	public String visit(Unary unary) throws RuntimeError {
 
 		return parenthesize(unary.operator.lexeme, unary.expr);
 	}
