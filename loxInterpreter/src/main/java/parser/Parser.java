@@ -55,11 +55,11 @@ public class Parser {
 
 		if (match(PRINT)) {
 			Stmt stmt = new PrintStmt(expression());
-			consume(SEMICOLON, "Expected a semicolon ");
+			consume(SEMICOLON, "Expected a semicolon after statement");
 			return stmt;
 		} else {
 			Stmt stmt = new ExprStmt(expression());
-			consume(SEMICOLON, "Expected a semicolon ");
+			consume(SEMICOLON, "Expected a semicolon after expression");
 			return stmt;
 		}
 

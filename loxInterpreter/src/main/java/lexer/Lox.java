@@ -12,7 +12,6 @@ import parser.Interpreter;
 import parser.Parser;
 import parser.Stmt;
 import parser.util.RuntimeError;
-import parser.util.StringUtils;
 
 public class Lox {
 
@@ -43,17 +42,20 @@ public class Lox {
 
 		final AstPrinter printer = new AstPrinter();
 		final Interpreter interpreter = new Interpreter();
-		Object result = null;
+
+		printParseTreeForEachStatement(statements, printer);
+
+		interpreter.interpret(statements);
+
+	}
+
+	private static void printParseTreeForEachStatement(final List<Stmt> statements, final AstPrinter printer) {
 		for (Stmt stmt : statements) {
 			System.out.println(
 					" ==============================================Parse Tree===============================");
 			System.out.println(printer.print(stmt));
-			result = interpreter.interpret(stmt);
-			System.out.println(
-					" ==============================================Execution result===============================");
-			System.out.println(StringUtils.stringify(result));
-		}
 
+		}
 	}
 
 	static void error(int line, String message) {

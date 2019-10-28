@@ -1,22 +1,27 @@
 package parser;
 
+import java.util.List;
+
 import lexer.Lox;
 import lexer.Token;
 import lexer.TokenType;
 import parser.evaluators.BinaryExprEvaluator;
 import parser.evaluators.BinaryExprEvaluatorFactory;
 import parser.util.RuntimeError;
+import parser.util.StringUtils;
 import parser.util.Validator;
 
-public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Object> {
+public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
-	public Object interpret(Stmt stmt) {
+	public void interpret(List<Stmt> statements) {
 		try {
-			Object result = interpretStmt(stmt);
-			return result;
+			for (Stmt stmt : statements) {
+				interpretStmt(stmt);
+			}
+
 		} catch (RuntimeError error) {
 			Lox.runtimeError(error);
-			return null;
+
 		}
 	}
 
@@ -40,13 +45,16 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Object> {
 	}
 
 	@Override
-	public Object visit(ExprStmt exprStmt) {
-		return evaluate(exprStmt.expr);
+	public Void visit(ExprStmt exprStmt) {
+		evaluate(exprStmt.expr);
+		return null;
 	}
 
 	@Override
-	public Object visit(PrintStmt printStmt) {
-		return evaluate(printStmt.expr);
+	public Void visit(PrintStmt printStmt) {
+		Object result = evaluate(printStmt.expr);
+		System.out.println(StringUtils.stringify(result));
+		return null;
 	}
 
 	@Override
