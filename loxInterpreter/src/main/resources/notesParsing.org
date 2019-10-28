@@ -9,8 +9,7 @@ unary     -> ("-"|"!")expression;
 binary    -> expression operator expression;
 operator  -> "==" | "!=" | "<" |"<=" | ">" | ">=" | "+" | "-" | "*" | "/" ;
 
-################################################################################
-
+================================================================================
 above grammar is ambiguous.
 It can be resolved by using the rules of precedence and ambiguity.
 
@@ -24,14 +23,42 @@ unary          → ( "!" | "-" ) unary
 primary        → NUMBER | STRING | "false" | "true" | "nil"
                | "(" expression ")" ;
                
-// Note: the ending * in some of the productions means 0 or more occurrences
-//imagine the above productions being used top down for different expressions like 2+3, 2*3+5 and so on..
+/* Note: the ending * in some of the productions means 0 or more occurrences
+imagine the above productions being used top down for different expressions like 2+3, 2*3+5 
+and so on. */
 
-//now lets add support for mulitple program statements
-//so that a lox script can be run
+================================================================================
+/*now lets add support for multiple program statements so that a lox script can be run*/
 
 program -> statement* EOF ;
 statement -> exprStmt
             | printStmt ;
 exprStmt -> expression ";" ;
 printStmt -> "print" expression ";" ;
+
+================================================================================
+/* now lets add support for variable bindings */
+
+program -> declaration* EOF;
+declaration -> variableDecl 
+             | statement   ;
+variableDecl -> "var" IDENTIFIER ( "=" expression )? ";" ;
+statement -> exprStmt |
+             printStmt ; 
+printStmt -> "print" expression ";"  ;
+
+expression     → equality ;
+equality       → comparison ( ( "!=" | "==" ) comparison )* ;    
+comparison     → addition ( ( ">" | ">=" | "<" | "<=" ) addition )* ; 
+addition       → multiplication ( ( "-" | "+" ) multiplication )* ;
+multiplication → unary ( ( "/" | "*" ) unary )* ;
+unary          → ( "!" | "-" ) unary
+               | primary ;
+primary        → NUMBER | STRING | "false" | "true" | "nil"
+               | "(" expression ")" | IDENTIFIER   ;
+
+/* in the variableDecl production the ? indicates zero or one occurrence. so that both var x; 
+and var x = 45; are allowed */
+/*The primary production is modified to include an identifier so that print variableName
+as well as print expression works */
+
