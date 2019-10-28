@@ -2,12 +2,26 @@ package parser;
 
 import parser.util.RuntimeError;
 
-public class AstPrinter implements ExprVisitor<String> {
+public class AstPrinter implements ExprVisitor<String>, StmtVisitor<String> {
 
 	public String print(Expr expr) {
 
 		return expr.accept(this);
 
+	}
+
+	public String print(Stmt stmt) {
+		return stmt.accept(this);
+	}
+
+	@Override
+	public String visit(ExprStmt exprStmt) {
+		return print(exprStmt.expr);
+	}
+
+	@Override
+	public String visit(PrintStmt printStmt) {
+		return parenthesize("print", printStmt.expr);
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import static lexer.TokenType.MINUS;
 import static lexer.TokenType.NIL;
 import static lexer.TokenType.NUMBER;
 import static lexer.TokenType.PLUS;
+import static lexer.TokenType.PRINT;
 import static lexer.TokenType.RIGHT_PAREN;
 import static lexer.TokenType.SEMICOLON;
 import static lexer.TokenType.SLASH;
@@ -21,6 +22,7 @@ import static lexer.TokenType.STAR;
 import static lexer.TokenType.STRING;
 import static lexer.TokenType.TRUE;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lexer.Lox;
@@ -36,12 +38,31 @@ public class Parser {
 		this.tokens = tokens;
 	}
 
-	public Expr parse() {
-		try {
-			return expression();
-		} catch (final ParseError e) {
-			return null;
+	public List<Stmt> parse() {
+
+		List<Stmt> statements = new ArrayList<>();
+		while (!isAtEnd()) {
+			try {
+				statements.add(statement());
+			} catch (ParseError e) {
+				System.err.println(e);
+			}
 		}
+		return statements;
+	}
+
+	private Stmt statement() throws ParseError {
+
+		if (match(PRINT)) {
+			Stmt stmt = new PrintStmt(expression());
+			consume(SEMICOLON, "Expected a semicolon ");
+			return stmt;
+		} else {
+			Stmt stmt = new ExprStmt(expression());
+			consume(SEMICOLON, "Expected a semicolon ");
+			return stmt;
+		}
+
 	}
 
 	private Expr expression() throws ParseError {

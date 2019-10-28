@@ -8,9 +8,9 @@ import java.nio.file.Path;
 import java.util.List;
 
 import parser.AstPrinter;
-import parser.Expr;
 import parser.Interpreter;
 import parser.Parser;
+import parser.Stmt;
 import parser.util.RuntimeError;
 import parser.util.StringUtils;
 
@@ -37,17 +37,22 @@ public class Lox {
 		final Scanner scanner = new Scanner(source);
 		final List<Token> tokens = scanner.scanTokens();
 		final Parser parser = new Parser(tokens);
-		final Expr expr = parser.parse();
-
+		final List<Stmt> statements = parser.parse();
 		if (hadError)
 			return;
 
-		System.out.println(" ==============================================Parse Tree===============================");
-		System.out.println(new AstPrinter().print(expr));
-		Interpreter interpreter = new Interpreter();
-		Object result = interpreter.interpret(expr);
-		System.out.println("===============================================Result===================================");
-		System.out.println(StringUtils.stringify(result));
+		final AstPrinter printer = new AstPrinter();
+		final Interpreter interpreter = new Interpreter();
+		Object result = null;
+		for (Stmt stmt : statements) {
+			System.out.println(
+					" ==============================================Parse Tree===============================");
+			System.out.println(printer.print(stmt));
+			result = interpreter.interpret(stmt);
+			System.out.println(
+					" ==============================================Execution result===============================");
+			System.out.println(StringUtils.stringify(result));
+		}
 
 	}
 

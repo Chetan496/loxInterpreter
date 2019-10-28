@@ -8,7 +8,17 @@ import parser.evaluators.BinaryExprEvaluatorFactory;
 import parser.util.RuntimeError;
 import parser.util.Validator;
 
-public class Interpreter implements ExprVisitor<Object> {
+public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Object> {
+
+	public Object interpret(Stmt stmt) {
+		try {
+			Object result = interpretStmt(stmt);
+			return result;
+		} catch (RuntimeError error) {
+			Lox.runtimeError(error);
+			return null;
+		}
+	}
 
 	public Object interpret(Expr expr) {
 		try {
@@ -21,8 +31,22 @@ public class Interpreter implements ExprVisitor<Object> {
 
 	}
 
+	private Object interpretStmt(Stmt stmt) {
+		return stmt.accept(this);
+	}
+
 	private Object evaluate(Expr expr) throws RuntimeError {
 		return expr.accept(this);
+	}
+
+	@Override
+	public Object visit(ExprStmt exprStmt) {
+		return evaluate(exprStmt.expr);
+	}
+
+	@Override
+	public Object visit(PrintStmt printStmt) {
+		return evaluate(printStmt.expr);
 	}
 
 	@Override
