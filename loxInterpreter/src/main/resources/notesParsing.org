@@ -26,3 +26,12 @@ primary        → NUMBER | STRING | "false" | "true" | "nil"
                
 // Note: the ending * in some of the productions means 0 or more occurrences
 //imagine the above productions being used top down for different expressions like 2+3, 2*3+5 and so on..
+
+//now lets add support for mulitple program statements
+//so that a lox script can be run
+
+program -> statement* EOF ;
+statement -> exprStmt
+            | printStmt ;
+exprStmt -> expression ";" ;
+printStmt -> "print" expression ";" ;
