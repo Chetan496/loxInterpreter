@@ -3,10 +3,12 @@ package parser;
 import static lexer.TokenType.BANG;
 import static lexer.TokenType.BANG_EQUAL;
 import static lexer.TokenType.EOF;
+import static lexer.TokenType.EQUAL;
 import static lexer.TokenType.EQUAL_EQUAL;
 import static lexer.TokenType.FALSE;
 import static lexer.TokenType.GREATER;
 import static lexer.TokenType.GREATER_EQUAL;
+import static lexer.TokenType.IDENTIFIER;
 import static lexer.TokenType.LEFT_PAREN;
 import static lexer.TokenType.LESS;
 import static lexer.TokenType.LESS_EQUAL;
@@ -21,6 +23,7 @@ import static lexer.TokenType.SLASH;
 import static lexer.TokenType.STAR;
 import static lexer.TokenType.STRING;
 import static lexer.TokenType.TRUE;
+import static lexer.TokenType.VAR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,12 +46,44 @@ public class Parser {
 		List<Stmt> statements = new ArrayList<>();
 		while (!isAtEnd()) {
 			try {
-				statements.add(statement());
+				statements.add(declaration());
 			} catch (ParseError e) {
 				System.err.println(e);
 			}
 		}
 		return statements;
+	}
+
+	private Stmt declaration() throws ParseError {
+
+		try {
+
+			if (match(VAR)) {
+				return varDeclaration();
+			}
+
+			return statement();
+
+		} catch (ParseError error) {
+			synchronize();
+			return null;
+		}
+	}
+
+	private Stmt varDeclaration() throws ParseError {
+		if (match(IDENTIFIER)) {
+			Token identifierToken = previous();
+
+			if (match(EQUAL)) {
+				Expr initializerExpr = expression();
+				consume(SEMICOLON, "Expected a semicolon after variable declaration");
+				return new Var(identifierToken, initializerExpr);
+			} else {
+				consume(SEMICOLON, "Expected a semicolon after variable declaration");
+				return new Var(identifierToken, null);
+			}
+		}
+		return null;
 	}
 
 	private Stmt statement() throws ParseError {
@@ -137,6 +172,10 @@ public class Parser {
 			final Expr expr = expression();
 			consume(RIGHT_PAREN, "Expect ')' after expression.");
 			return new Grouping(expr);
+		}
+
+		if (match(IDENTIFIER)) {
+			return new Identifier(previous());
 		}
 
 		throw error(peek(), "Expect expression.");

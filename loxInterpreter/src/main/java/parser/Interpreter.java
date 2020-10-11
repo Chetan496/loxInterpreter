@@ -104,4 +104,10 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
 	}
 
+	@Override
+	public Object visit(Identifier identifier) throws RuntimeError {
+		// look up this variable in the environment and evaluate expr and return it
+		return null;
+	}
+
 }

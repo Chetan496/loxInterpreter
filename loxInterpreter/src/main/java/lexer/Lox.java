@@ -45,7 +45,7 @@ public class Lox {
 
 		printParseTreeForEachStatement(statements, printer);
 
-		interpreter.interpret(statements);
+		// interpreter.interpret(statements);
 
 	}
 

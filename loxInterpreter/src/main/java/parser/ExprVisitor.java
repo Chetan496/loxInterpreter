@@ -9,4 +9,6 @@ public interface ExprVisitor<T> {
 	T visit(Literal literal);
 
 	T visit(Unary unary);
+
+	T visit(Identifier identifier);
 }

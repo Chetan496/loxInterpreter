@@ -62,4 +62,9 @@ public class AstPrinter implements ExprVisitor<String>, StmtVisitor<String> {
 		return builder.toString();
 	}
 
+	@Override
+	public String visit(Identifier identifier) {
+		return parenthesize("var", identifier);
+	}
+
 }
